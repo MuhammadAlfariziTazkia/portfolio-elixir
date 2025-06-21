@@ -1,0 +1,40 @@
+<.header>
+  Work experience {@work_experience.id}
+  <:subtitle>This is a work_experience record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/work_experiences/#{@work_experience}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit work_experience</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Company">{@work_experience.company}</:item>
+  <:item title="Position en">{@work_experience.position_en}</:item>
+  <:item title="Position jp">{@work_experience.position_jp}</:item>
+  <:item title="Period">{@work_experience.period}</:item>
+  <:item title="Type en">{@work_experience.type_en}</:item>
+  <:item title="Type jp">{@work_experience.type_jp}</:item>
+  <:item title="Logo">{@work_experience.logo}</:item>
+  <:item title="Description en">{@work_experience.description_en}</:item>
+  <:item title="Description jp">{@work_experience.description_jp}</:item>
+  <:item title="Key achievements en">{@work_experience.key_achievements_en}</:item>
+  <:item title="Key achievements jp">{@work_experience.key_achievements_jp}</:item>
+  <:item title="Full description en">{@work_experience.full_description_en}</:item>
+  <:item title="Full description jp">{@work_experience.full_description_jp}</:item>
+  <:item title="Detailed achievements en">{@work_experience.detailed_achievements_en}</:item>
+  <:item title="Detailed achievements jp">{@work_experience.detailed_achievements_jp}</:item>
+</.list>
+
+<.back navigate={~p"/work_experiences"}>Back to work_experiences</.back>
+
+<.modal :if={@live_action == :edit} id="work_experience-modal" show on_cancel={JS.patch(~p"/work_experiences/#{@work_experience}")}>
+  <.live_component
+    module={PortfolioWeb.WorkExperienceLive.FormComponent}
+    id={@work_experience.id}
+    title={@page_title}
+    action={@live_action}
+    work_experience={@work_experience}
+    patch={~p"/work_experiences/#{@work_experience}"}
+  />
+</.modal>

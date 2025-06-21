@@ -1,0 +1,50 @@
+<.header>
+  Listing Articles
+  <:actions>
+    <.link patch={~p"/articles/new"}>
+      <.button>New Article</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="articles"
+  rows={@streams.articles}
+  row_click={fn {_id, article} -> JS.navigate(~p"/articles/#{article}") end}
+>
+  <:col :let={{_id, article}} label="Title en">{article.title_en}</:col>
+  <:col :let={{_id, article}} label="Title jp">{article.title_jp}</:col>
+  <:col :let={{_id, article}} label="Slug">{article.slug}</:col>
+  <:col :let={{_id, article}} label="Description en">{article.description_en}</:col>
+  <:col :let={{_id, article}} label="Description jp">{article.description_jp}</:col>
+  <:col :let={{_id, article}} label="Content en">{article.content_en}</:col>
+  <:col :let={{_id, article}} label="Content jp">{article.content_jp}</:col>
+  <:col :let={{_id, article}} label="Thumbnail">{article.thumbnail}</:col>
+  <:col :let={{_id, article}} label="Published date">{article.published_date}</:col>
+  <:col :let={{_id, article}} label="Read time">{article.read_time}</:col>
+  <:action :let={{_id, article}}>
+    <div class="sr-only">
+      <.link navigate={~p"/articles/#{article}"}>Show</.link>
+    </div>
+    <.link patch={~p"/articles/#{article}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, article}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: article.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="article-modal" show on_cancel={JS.patch(~p"/articles")}>
+  <.live_component
+    module={PortfolioWeb.ArticleLive.FormComponent}
+    id={@article.id || :new}
+    title={@page_title}
+    action={@live_action}
+    article={@article}
+    patch={~p"/articles"}
+  />
+</.modal>

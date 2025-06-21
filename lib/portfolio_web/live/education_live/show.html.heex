@@ -1,0 +1,35 @@
+<.header>
+  Education {@education.id}
+  <:subtitle>This is a education record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/education/#{@education}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit education</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Institution name">{@education.institution_name}</:item>
+  <:item title="Degree en">{@education.degree_en}</:item>
+  <:item title="Degree jp">{@education.degree_jp}</:item>
+  <:item title="Period">{@education.period}</:item>
+  <:item title="Gpa">{@education.gpa}</:item>
+  <:item title="Description en">{@education.description_en}</:item>
+  <:item title="Description jp">{@education.description_jp}</:item>
+  <:item title="Certificate url">{@education.certificate_url}</:item>
+  <:item title="Transcript url">{@education.transcript_url}</:item>
+  <:item title="Icon">{@education.icon}</:item>
+</.list>
+
+<.back navigate={~p"/education"}>Back to education</.back>
+
+<.modal :if={@live_action == :edit} id="education-modal" show on_cancel={JS.patch(~p"/education/#{@education}")}>
+  <.live_component
+    module={PortfolioWeb.EducationLive.FormComponent}
+    id={@education.id}
+    title={@page_title}
+    action={@live_action}
+    education={@education}
+    patch={~p"/education/#{@education}"}
+  />
+</.modal>

@@ -1,0 +1,55 @@
+<.header>
+  Listing Work experiences
+  <:actions>
+    <.link patch={~p"/work_experiences/new"}>
+      <.button>New Work experience</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="work_experiences"
+  rows={@streams.work_experiences}
+  row_click={fn {_id, work_experience} -> JS.navigate(~p"/work_experiences/#{work_experience}") end}
+>
+  <:col :let={{_id, work_experience}} label="Company">{work_experience.company}</:col>
+  <:col :let={{_id, work_experience}} label="Position en">{work_experience.position_en}</:col>
+  <:col :let={{_id, work_experience}} label="Position jp">{work_experience.position_jp}</:col>
+  <:col :let={{_id, work_experience}} label="Period">{work_experience.period}</:col>
+  <:col :let={{_id, work_experience}} label="Type en">{work_experience.type_en}</:col>
+  <:col :let={{_id, work_experience}} label="Type jp">{work_experience.type_jp}</:col>
+  <:col :let={{_id, work_experience}} label="Logo">{work_experience.logo}</:col>
+  <:col :let={{_id, work_experience}} label="Description en">{work_experience.description_en}</:col>
+  <:col :let={{_id, work_experience}} label="Description jp">{work_experience.description_jp}</:col>
+  <:col :let={{_id, work_experience}} label="Key achievements en">{work_experience.key_achievements_en}</:col>
+  <:col :let={{_id, work_experience}} label="Key achievements jp">{work_experience.key_achievements_jp}</:col>
+  <:col :let={{_id, work_experience}} label="Full description en">{work_experience.full_description_en}</:col>
+  <:col :let={{_id, work_experience}} label="Full description jp">{work_experience.full_description_jp}</:col>
+  <:col :let={{_id, work_experience}} label="Detailed achievements en">{work_experience.detailed_achievements_en}</:col>
+  <:col :let={{_id, work_experience}} label="Detailed achievements jp">{work_experience.detailed_achievements_jp}</:col>
+  <:action :let={{_id, work_experience}}>
+    <div class="sr-only">
+      <.link navigate={~p"/work_experiences/#{work_experience}"}>Show</.link>
+    </div>
+    <.link patch={~p"/work_experiences/#{work_experience}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, work_experience}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: work_experience.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="work_experience-modal" show on_cancel={JS.patch(~p"/work_experiences")}>
+  <.live_component
+    module={PortfolioWeb.WorkExperienceLive.FormComponent}
+    id={@work_experience.id || :new}
+    title={@page_title}
+    action={@live_action}
+    work_experience={@work_experience}
+    patch={~p"/work_experiences"}
+  />
+</.modal>

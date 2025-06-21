@@ -1,0 +1,47 @@
+<.header>
+  Listing Article categories
+  <:actions>
+    <.link patch={~p"/article_categories/new"}>
+      <.button>New Article category</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="article_categories"
+  rows={@streams.article_categories}
+  row_click={fn {_id, article_category} -> JS.navigate(~p"/article_categories/#{article_category}") end}
+>
+  <:col :let={{_id, article_category}} label="Name en">{article_category.name_en}</:col>
+  <:col :let={{_id, article_category}} label="Name jp">{article_category.name_jp}</:col>
+  <:col :let={{_id, article_category}} label="Slug">{article_category.slug}</:col>
+  <:col :let={{_id, article_category}} label="Description en">{article_category.description_en}</:col>
+  <:col :let={{_id, article_category}} label="Description jp">{article_category.description_jp}</:col>
+  <:col :let={{_id, article_category}} label="Icon">{article_category.icon}</:col>
+  <:col :let={{_id, article_category}} label="Color">{article_category.color}</:col>
+  <:action :let={{_id, article_category}}>
+    <div class="sr-only">
+      <.link navigate={~p"/article_categories/#{article_category}"}>Show</.link>
+    </div>
+    <.link patch={~p"/article_categories/#{article_category}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, article_category}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: article_category.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="article_category-modal" show on_cancel={JS.patch(~p"/article_categories")}>
+  <.live_component
+    module={PortfolioWeb.ArticleCategoryLive.FormComponent}
+    id={@article_category.id || :new}
+    title={@page_title}
+    action={@live_action}
+    article_category={@article_category}
+    patch={~p"/article_categories"}
+  />
+</.modal>

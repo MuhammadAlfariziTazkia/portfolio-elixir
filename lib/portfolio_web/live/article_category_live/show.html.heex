@@ -1,0 +1,32 @@
+<.header>
+  Article category {@article_category.id}
+  <:subtitle>This is a article_category record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/article_categories/#{@article_category}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit article_category</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Name en">{@article_category.name_en}</:item>
+  <:item title="Name jp">{@article_category.name_jp}</:item>
+  <:item title="Slug">{@article_category.slug}</:item>
+  <:item title="Description en">{@article_category.description_en}</:item>
+  <:item title="Description jp">{@article_category.description_jp}</:item>
+  <:item title="Icon">{@article_category.icon}</:item>
+  <:item title="Color">{@article_category.color}</:item>
+</.list>
+
+<.back navigate={~p"/article_categories"}>Back to article_categories</.back>
+
+<.modal :if={@live_action == :edit} id="article_category-modal" show on_cancel={JS.patch(~p"/article_categories/#{@article_category}")}>
+  <.live_component
+    module={PortfolioWeb.ArticleCategoryLive.FormComponent}
+    id={@article_category.id}
+    title={@page_title}
+    action={@live_action}
+    article_category={@article_category}
+    patch={~p"/article_categories/#{@article_category}"}
+  />
+</.modal>
