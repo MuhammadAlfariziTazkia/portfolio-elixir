@@ -9,7 +9,12 @@ defmodule Portfolio.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      releases: [
+        portfolio: [
+          include_executables_for: [:unix]
+        ]
+      ]
     ]
   end
 
