@@ -66,30 +66,33 @@ defmodule PortfolioWeb.ArticleLive.FormComponent do
   end
 
   def handle_event("save", %{"article" => article_params}, socket) do
-  Logger.debug("Mulai proses upload...")
+    Logger.debug("Mulai proses upload...")
 
-  uploaded_urls =
-    consume_uploaded_entries(socket, :thumbnail, fn %{path: path}, entry ->
-      Logger.debug("Nama file: #{entry.client_name}")
-      dest = Path.join("priv/static/uploads", entry.client_name)
-      File.mkdir_p!("priv/static/uploads")
-      File.cp!(path, dest)
-      {:ok, "/uploads/#{entry.client_name}"}
-    end)
+    uploaded_urls =
+      consume_uploaded_entries(socket, :thumbnail, fn %{path: path}, entry ->
+        Logger.debug("Nama file: #{entry.client_name}")
 
-  Logger.debug("Uploaded URLs: #{inspect(uploaded_urls)}")
+        case Portfolio.Cloudinary.upload_file(path) do
+          {:ok, %{"secure_url" => url}} ->
+            {:ok, url}
 
-  case uploaded_urls do
-    [url] ->
-      Logger.debug("MASUK ")
-      article_params = Map.put(article_params, "thumbnail", url)
-      save_article(socket, socket.assigns.action, article_params)
+          {:error, reason} ->
+            Logger.error("Upload ke Cloudinary gagal: #{inspect(reason)}")
+            {:error, "Upload gagal"}
+        end
+      end)
 
-    _ ->
-      Logger.debug("GAMASUK")
-      save_article(socket, socket.assigns.action, article_params)
+    Logger.debug("Uploaded URLs: #{inspect(uploaded_urls)}")
+
+    case uploaded_urls do
+      [url] ->
+        article_params = Map.put(article_params, "thumbnail", url)
+        save_article(socket, socket.assigns.action, article_params)
+
+      _ ->
+        save_article(socket, socket.assigns.action, article_params)
+    end
   end
-end
 
   defp save_article(socket, :edit, article_params) do
     case Blog.update_article(socket.assigns.article, article_params) do
