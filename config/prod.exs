@@ -6,8 +6,11 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :portfolio, PortfolioWeb.Endpoint,
+  url: [host: "202.10.42.156", port: 4000],
+  http: [ip: {0,0,0,0}, port: 4000],
   cache_static_manifest: "priv/static/cache_manifest.json",
   server: true
+
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Portfolio.Finch
 
@@ -15,7 +18,7 @@ config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: Portfolio.Finch
 config :swoosh, local: false
 
 # Do not print debug messages in production
-config :logger, level: :info
+config :logger, level: :debug
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
