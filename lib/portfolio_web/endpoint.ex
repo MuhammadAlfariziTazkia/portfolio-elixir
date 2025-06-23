@@ -51,4 +51,8 @@ defmodule PortfolioWeb.Endpoint do
   plug Plug.Head
   plug Plug.Session, @session_options
   plug PortfolioWeb.Router
+
+  plug CORSPlug,
+    # atau ganti dengan domain vercel kamu untuk lebih aman
+    origin: ["*"]
 end
